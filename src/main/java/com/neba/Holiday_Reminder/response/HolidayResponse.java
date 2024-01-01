@@ -6,63 +6,89 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-
+//for Calendarific api response
 public class HolidayResponse {
-    private int status;
-    private String warning;
-    private Requests requests;
-    private List<Holiday> holidays;
+    private Meta meta;
+    private Response response;
 
-    @lombok.Data
+    @Data
     @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @AllArgsConstructor
     @NoArgsConstructor
-
-
-    public static class Requests {
-        private int used;
-        private int available;
-        private String resets;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Meta {
+        private int code;
     }
-    @lombok.Data
+
+    @Data
     @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Response {
+        private List<Holiday> holidays;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Holiday {
         private String name;
-        private String date;
-        private String observed;
-        private boolean publicHoliday;
-        private String country;
-        private String uuid;
-        private Weekday weekday;
+        private String description;
+        private DateDetails date;
+        private List<String> type;
+        private String primary_type;
+        private String canonical_url;
+        private String urlid;
+        private String locations;
+
     }
-    @lombok.Data
+
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Weekday {
-        private DayDetails date;
-        private DayDetails observed;
+    public static class DateDetails {
+        private String iso;
+        private DateTime datetime;
+        private Timezone timezone;
     }
-    @lombok.Data
+
+
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class DayDetails {
-        private String name;
-        private String numeric;
-
-
+    public static class DateTime {
+        private int year;
+        private int month;
+        private int day;
+        private int hour;
+        private int minute;
+        private int second;
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Timezone {
+        private String offset;
+        private String zoneabb;
+        private int zoneoffset;
+        private int zonedst;
+        private int zonetotaloffset;
+    }
 }
+

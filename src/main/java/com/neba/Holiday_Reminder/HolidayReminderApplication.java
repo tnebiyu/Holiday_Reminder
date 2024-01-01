@@ -25,7 +25,7 @@ public class HolidayReminderApplication {
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 			telegramBotsApi.registerBot(bot);
 
-			System.out.println("Bot started successfully");
+
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}

@@ -3,8 +3,8 @@ package com.neba.Holiday_Reminder;
 import com.neba.Holiday_Reminder.model.User;
 import com.neba.Holiday_Reminder.repo.UserRepo;
 import com.neba.Holiday_Reminder.response.HolidayResponse;
+import com.neba.Holiday_Reminder.response.HolidayResponse2;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +46,56 @@ private final UserRepo userRepo;
 
     }
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
-    public void checkAndSendHolidayMessageUsa() {
+    public void checkAndSendHolidayMessageUsa() {// for Calendarific api
+        List<User> users = userRepo.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = LocalDate.now().format(formatter);
+
+        for (User user : users) {
+            long chatId = user.getChatId();
+
+            String apiUrl = "";
+
+            RestTemplate restTemplate = new RestTemplate();
+            HolidayResponse response = restTemplate.getForObject(apiUrl, HolidayResponse.class);
+
+            if (response != null && response.getResponse() != null && response.getResponse().getHolidays() != null) {
+                for (HolidayResponse.Holiday holiday : response.getResponse().getHolidays()) {
+                    String adjustedDate = holiday.getDate().getIso().split("T")[0];
+                    if (today.equals(adjustedDate)) {
+                        sendTextMessage(chatId, "Today is " + holiday.getName() + ". Happy holiday!");
+                    }
+                }
+            }
+        }
+    }
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    public void checkAndSendHolidayMessageEthiopia() {// for Calendarific api
+        List<User> users = userRepo.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = LocalDate.now().format(formatter);
+
+        for (User user : users) {
+            long chatId = user.getChatId();
+
+            String apiUrl = "";
+
+            RestTemplate restTemplate = new RestTemplate();
+            HolidayResponse response = restTemplate.getForObject(apiUrl, HolidayResponse.class);
+
+            if (response != null && response.getResponse() != null && response.getResponse().getHolidays() != null) {
+                for (HolidayResponse.Holiday holiday : response.getResponse().getHolidays()) {
+                    String adjustedDate = holiday.getDate().getIso().split("T")[0];
+                    if (today.equals(adjustedDate)) {
+                        sendTextMessage(chatId, "Today is " + holiday.getName() + ". Happy holiday!");
+                    }
+                }
+            }
+        }
+
+    }
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    public void checkAndSendHolidayMessageUsa2() { // for holiday api
         List<User> users = userRepo.findAll();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = LocalDate.now().format(formatter);
@@ -58,11 +107,11 @@ private final UserRepo userRepo;
 
 
             RestTemplate restTemplate = new RestTemplate();
-            HolidayResponse response = restTemplate.getForObject(apiUrl, HolidayResponse.class);
+            HolidayResponse2 response = restTemplate.getForObject(apiUrl, HolidayResponse2.class);
 
             if (response != null && response.getHolidays() != null) {
-                for (HolidayResponse.Holiday holiday : response.getHolidays()) {
-                    String adjustedDate = holiday.getDate().replace("2022", "2023");
+                for (HolidayResponse2.Holiday holiday : response.getHolidays()) {
+                    String adjustedDate = holiday.getDate().replace("2023", "2024");
                     if (today.equals(adjustedDate)) {
                         sendTextMessage(chatId, "Today is " + holiday.getName() + ". Happy holiday!");
                     }
@@ -71,7 +120,7 @@ private final UserRepo userRepo;
         }
     }
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
-    public void checkAndSendHolidayMessageEthiopia() {
+    public void checkAndSendHolidayMessageEthiopia2() {// for holiday api
         List<User> users = userRepo.findAll();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = LocalDate.now().format(formatter);
@@ -82,11 +131,11 @@ private final UserRepo userRepo;
             String apiUrl = "${HOLIDAY_API_URL_ETHIOPIA}";
 
             RestTemplate restTemplate = new RestTemplate();
-            HolidayResponse response = restTemplate.getForObject(apiUrl, HolidayResponse.class);
+            HolidayResponse2 response = restTemplate.getForObject(apiUrl, HolidayResponse2.class);
 
             if (response != null && response.getHolidays() != null) {
-                for (HolidayResponse.Holiday holiday : response.getHolidays()) {
-                    String adjustedDate = holiday.getDate().replace("2022", "2023");
+                for (HolidayResponse2.Holiday holiday : response.getHolidays()) {
+                    String adjustedDate = holiday.getDate().replace("2023", "2024");
                     if (today.equals(adjustedDate)) {
                         sendTextMessage(chatId, "Today is " + holiday.getName() + ". Happy holiday!");
                     }
@@ -123,10 +172,9 @@ private final UserRepo userRepo;
 
         return "your_holidays_bot";
     }
-
     @Override
     public String getBotToken() {
 
-        return "${bot_token}";
+        return "";
     }
 }
